@@ -37,7 +37,7 @@ public class ScoreboardServer{
                     //the currentGame is created with the games array at that array
                     ChallengeResponseGame currentGame=games.get(gameChoice);
                     //The available Questions
-                    System.out.println("Q1 or Q2");
+                    System.out.println("Question 1 or Question 2");
                     //Choosing the which question to play
                     int gameChoice2 = input.readLine();
                     //The question is choosen
@@ -46,7 +46,6 @@ public class ScoreboardServer{
                     String userAnswer = input.readLine();
                     //checking the answer for the question of the current game by this.UserName
                     currentGame.answer(UserName, question, userAnswer);
-                        case "Question": System.out.println("Choose question");
                 case "ScoreBoard": System.out.println("Print Scoredboard");
                     int gameChoice3 = input.readLine();
                     //Should get the game at the choice of the user and return the names and scores
