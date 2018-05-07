@@ -25,8 +25,20 @@ public class ScoreboardServer{
             //listens for activity on the server
             Socket clientSocket = serverSocket.accept();
             
-            String userInput=""; //sake of debugging
-            switch(userInput){
+            while(true){
+                //Output and Input stream creation
+                //Output sends data to the server
+                PrintWriter output = new PrintWriter(clientSocket.getOutputStream(),true);
+                //Input Recieves data from the server
+                BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                //Username Declariation
+                //add the players 
+                //output.println("Input User Name");
+                String UserName = input.readLine();
+                System.out.println("User Name Selected");
+                String userInput = input.readLine();
+                switch(userInput){
+                    
                 case "Help": System.out.println("Other Commands");
                     System.out.println("Expected Inputs: Help, Game, Question, Scoreboard, Random");
                 case "Game": System.out.println("Choose game Crypto or Networking");
@@ -38,7 +50,7 @@ public class ScoreboardServer{
                     ChallengeResponseGame currentGame=games.get(gameChoice);
                     //The available Questions
                     System.out.println("Question 1 or Question 2");
-                    //Choosing the which question to play
+                    //Choosing the which question to play                    
                     int gameChoice2 = input.readLine();
                     //The question is choosen
                     String question = currentGame.getQuestions().get(gameChoice2).getQuestion();
@@ -54,20 +66,22 @@ public class ScoreboardServer{
                     //Random number creation for games
                     Random generator = new Random();   
                     //Apply the number to the list of games
-                    ChallengeResponseGame currentGame=games.get(generator.nextInt(1));
+                    ChallengeResponseGame currentGameRandom=games.get(generator.nextInt(1));
                     //add the username to the current game
                     currentGame.addPlayer(UserName);                
                     //Question selection is done by random choice
                     //Store the question for the current game by getting the questions
                     //then index of the next random number to get the single question
-                    String question = currentGame.getQuestions().get(generator.nextInt(1)).getQuestion();
+                    String questionRandom = currentGameRandom.getQuestions().get(generator.nextInt(1)).getQuestion();
                     //UserAnswer for the question
-                    String userAnswer = input.readLine();
+                    String userAnswerRandom = input.readLine();
                     //checking the answer for the question of the current game by this.UserName
                     currentGame.answer(UserName, question, userAnswer);
-                    
-                default: System.out.println("Unexpected Input");
+               default: System.out.println("Unexpected Input");
             } 
+            }
+            String userInput=""; //sake of debugging
+            
           }     
           catch (IOException ex) {
             System.err.println(String.format("Unable to connect to port %d", 
