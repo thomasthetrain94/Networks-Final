@@ -1,12 +1,14 @@
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
 import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Random; 
+
 //Must support mutlple clients at the same time  Some version of a Player Handler
 //Questions are only specify to a game: Keep track of players  Player handler 
 //Authenticate players by name
@@ -17,14 +19,25 @@ import java.util.Random;
  */
 //middle man between client and game
 public class ScoreboardServer{
-    private ArrayList<ChallengeResponseGame> games;
-    
+    private ArrayList<ChallengeResponseGame> games;   
+    private ArrayList<ScoreboardClient> Players; 
     public void startServer(int sslPort){
         try{
             //Creates a server socket, bound to the specified port.
             ServerSocket serverSocket = new ServerSocket(sslPort);
             //listens for activity on the server
-            Socket clientSocket = serverSocket.accept();             
+            while (true) {  
+                Socket clientSocket = serverSocket.accept();
+                PrintWriter output = new PrintWriter(clientSocket.getOutputStream(),true);
+                BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
+                // WRITE ME: accept connection, extract streams and start thread                
+                ScoreboardClient client = new ScoreboardClient(input, output);
+                Thread t = new Thread(client);
+                t.start();//memory error    
+                // register callback
+                //Players.registerCallback(this);
+                Players.add(client);
+            }           
         }catch (IOException ex) {
             System.err.println(String.format("Unable to connect to port %d", 
                     sslPort));
