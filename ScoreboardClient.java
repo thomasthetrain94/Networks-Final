@@ -1,9 +1,9 @@
 import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -11,11 +11,21 @@ import java.util.Random;
  * MUST BE called ScoreboardClient.java
  */
 public class ScoreboardClient implements Runnable {    
+    protected BufferedReader input;
+    protected PrintWriter output;
+    private ScoreboardClient master;
     //Interact with the questions from the challenge Response
     private ArrayList<ChallengeResponseGame> games;
-    public void ClientSomething(){
+    protected void registerCallback(ScoreboardClient c) {
+        this.master = c;
+    }
+    public ScoreboardClient(BufferedReader in, PrintWriter out) {
+        this.input = in;
+        this.output = out;
+    }
+    public void run(){
         String player = "";
-        int port = 3998;
+        int port = 3999;
         try{
             //Creates a server socket, bound to the specified port.
             //should connect to the localhost on port 4001
@@ -29,8 +39,7 @@ public class ScoreboardClient implements Runnable {
             String UserName = input.readLine();
             //Add to array of people
             System.out.println("User Name Selected");
-            while(true){
-                
+            while(true){                
                 String userInput = input.readLine();
                 switch(userInput){
                     //Or this may have to be done with an IF Else statements which might
@@ -93,13 +102,10 @@ public class ScoreboardClient implements Runnable {
             System.err.println(String.format("Unable to connect to port %d", 
                     port));
                 }
-         /*catch(java.lang.ArrayIndexOutOfBoundsException ex){
+                 /*catch(java.lang.ArrayIndexOutOfBoundsException ex){
         System.err.println("Shit went to far");
         }catch(java.lang.NullPointerException ex){
         System.err.println("UserInput for switch")  ;
         }*/
-    }
-    public void run(){
-        
     }
 }
