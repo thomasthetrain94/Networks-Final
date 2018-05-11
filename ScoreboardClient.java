@@ -19,13 +19,13 @@ public class ScoreboardClient implements Runnable {
     protected void registerCallback(ScoreboardClient c) {
         this.master = c;
     }
-    public ScoreboardClient(BufferedReader in, PrintWriter out) {
-        this.input = in;
-        this.output = out;
+    public ScoreboardClient(BufferedReader input, PrintWriter output) {
+        this.input = input;
+        this.output = output;
     }
     public void run(){
         String player = "";
-        int port = 3999;
+        int port = 4001;
         try{
             //Creates a server socket, bound to the specified port.
             //should connect to the localhost on port 4001
@@ -35,6 +35,7 @@ public class ScoreboardClient implements Runnable {
             PrintWriter output = new PrintWriter(clientSocket.getOutputStream(),true);
             //Input Recieves data from the server
             BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            System.out.println("User Name Selected");
             //Username Declariation
             String UserName = input.readLine();
             //Add to array of people
@@ -98,14 +99,12 @@ public class ScoreboardClient implements Runnable {
                     default: System.out.println("Unexpected Input");
                 } 
             }    
-            }catch (IOException ex) {
-            System.err.println(String.format("Unable to connect to port %d", 
-                    port));
-                }
-                 /*catch(java.lang.ArrayIndexOutOfBoundsException ex){
-        System.err.println("Shit went to far");
-        }catch(java.lang.NullPointerException ex){
-        System.err.println("UserInput for switch")  ;
-        }*/
+            }catch(IOException ex) {
+            System.err.println(String.format("Unable to connect to port %d",port));
+            }catch(java.lang.ArrayIndexOutOfBoundsException ex){
+               System.err.println("Shit went to far");
+            }catch(java.lang.NullPointerException ex){
+               System.err.println("UserInput for switch")  ;
+        }
     }
 }
