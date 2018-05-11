@@ -8,6 +8,9 @@ import java.net.Socket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Random; 
+import java.lang.Error;
+
+
 
 //Must support mutlple clients at the same time  Some version of a Player Handler
 //Questions are only specify to a game: Keep track of players  Player handler 
@@ -24,20 +27,20 @@ public class ScoreboardServer{
     public void startServer(int sslPort){
         try{
             //Creates a server socket, bound to the specified port.
-            ServerSocket serverSocket = new ServerSocket(sslPort);
+            ServerSocket server = new ServerSocket(sslPort);
             //listens for activity on the server
             while (true) {  
-                Socket clientSocket = serverSocket.accept();
-                PrintWriter output = new PrintWriter(clientSocket.getOutputStream(),true);
-                BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
+                Socket client = server.accept();
+                BufferedReader input = new BufferedReader(new InputStreamReader(client.getInputStream())); 
+                PrintWriter output = new PrintWriter(client.getOutputStream(),true);                
                 // WRITE ME: accept connection, extract streams and start thread                
-                ScoreboardClient client = new ScoreboardClient(input, output);
-                Thread t = new Thread(client);
+                ScoreboardClient clientThread = new ScoreboardClient(input, output);
+                Thread t = new Thread(clientThread);
                 t.start();//memory error    
                 // register callback
-                //Players.registerCallback(this);
-                Players.add(client);
-            }           
+                clientThread.registerCallback(clientThread);
+                Players.add(clientThread);
+            }            
         }catch (IOException ex) {
             System.err.println(String.format("Unable to connect to port %d", 
                     sslPort));
@@ -45,7 +48,9 @@ public class ScoreboardServer{
             System.err.println("Shit went to far");
         }catch(java.lang.NullPointerException ex){
             System.err.println("UserInput for switch")  ;
-        }
+        }/*catch(java.lang.OutofMemoryError ex){
+            System.err.println("I can't remember");
+        }*/
     }        
     //Arraylist to hold the list of ChallengeResponseGame
     public ScoreboardServer(ArrayList<ChallengeResponseGame> games){ 
@@ -83,7 +88,6 @@ Expected Inputs: Help, Game, Question, Scoreboard, Random
 User Name Selected ***Keeps going back to the The top since while True?***
 Choose game Crypto or Networking
 0:Crypto /n1:Networking
-
 void Help(){//temp methods just for ease of understanding
 System.out.println("Expected Inputs: Help, Game, Question, Scoreboard, Random");
 }        
@@ -126,6 +130,4 @@ int gameChoice3 = input.readLine();
 //Should get the game at the choice of the user and return the names and scores
 games.get(gameChoice).getScores();             
 }
- */    
-
-    
+ */
